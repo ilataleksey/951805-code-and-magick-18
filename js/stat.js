@@ -34,6 +34,12 @@ var renderText = function (ctx, x, y, color, font, texts) {
   }
 };
 
+var renderColumn = function (ctx, x, y, name, time, w, h) {
+  ctx.fillText(name, x, y);
+  ctx.fillRect(x, y - TEXT_WIDTH, w, h);
+  ctx.fillText(time, x, y - TEXT_WIDTH - GAP + h);
+};
+
 var getRandomInt = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -58,8 +64,6 @@ window.renderStatistics = function (ctx, names, times) {
     var statisticsX = CLOUD_X + BAR_GAP + (BAR_WIDTH + BAR_GAP) * i;
     var barHeight = -(BAR_HEIGHT * times[i] / maxTime);
 
-    ctx.fillText(names[i], statisticsX, CLOUD_HEIGHT);
-    ctx.fillRect(statisticsX, CLOUD_HEIGHT - TEXT_WIDTH, BAR_WIDTH, barHeight);
-    ctx.fillText(Math.round(times[i]), statisticsX, CLOUD_HEIGHT - TEXT_WIDTH - GAP + barHeight);
+    renderColumn(ctx, statisticsX, CLOUD_HEIGHT, names[i], Math.round(times[i]), BAR_WIDTH, barHeight);
   }
 };
