@@ -16,16 +16,6 @@
     ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
   };
 
-  var getMaxElement = function (arr) {
-    var maxElement = arr[0];
-    for (var i = 1; i < arr.length; i++) {
-      if (maxElement < arr[i]) {
-        maxElement = arr[i];
-      }
-    }
-    return maxElement;
-  };
-
   var renderText = function (ctx, x, y, color, font, texts) {
     ctx.fillStyle = color;
     ctx.font = font;
@@ -41,14 +31,8 @@
     ctx.fillText(time, x, y - TEXT_WIDTH - GAP + h);
   };
 
-  var getRandomInt = function (min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
-
   var getColorForName = function (name) {
-    return name === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'hsl(225, ' + getRandomInt(1, 100) + '%, 50%)';
+    return name === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'hsl(225, ' + window.helpers.getRandomInt(1, 100) + '%, 50%)';
   };
 
   window.renderStatistics = function (ctx, names, times) {
@@ -57,7 +41,7 @@
 
     renderText(ctx, CLOUD_X + GAP, CLOUD_Y + GAP * 4, '#000000', '16px, PT Mono', ['Ура вы победили!', 'Список результатов:']);
 
-    var maxTime = getMaxElement(times);
+    var maxTime = window.helpers.getMaxElement(times);
 
     for (var i = 0; i < names.length; i++) {
       ctx.fillStyle = getColorForName(names[i]);
