@@ -4,7 +4,7 @@
   window.colorize = function (element, input, colors) {
     element.addEventListener('click', function (evt) {
       evt.preventDefault();
-      var color = window.getRandomValue(colors);
+      var color = window.helpers.getRandomValue(colors);
       if (element.tagName.toLowerCase() === 'div') {
         element.style.backgroundColor = color;
       } else {
