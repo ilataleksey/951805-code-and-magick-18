@@ -1,6 +1,6 @@
 'use strict';
 
-window.similarWizard = (function () {
+(function () {
   var WIZARDCOUNT = 4;
 
   var setupSimilar = document.querySelector('.setup-similar');
@@ -11,20 +11,20 @@ window.similarWizard = (function () {
     .content
     .querySelector('.setup-similar-item');
 
-  window.getHeros = function (arrNames, arrSurnames, arrCoatColors, arrEyesColors) {
+  var getHeros = function (arrNames, arrSurnames, arrCoatColors, arrEyesColors) {
     var heros = [];
     for (var i = 0; i < WIZARDCOUNT; i++) {
       var hero = {
-        name: window.getRandomValue(arrNames) + ' ' + window.getRandomValue(arrSurnames),
-        coatColor: window.getRandomValue(arrCoatColors),
-        eyesColor: window.getRandomValue(arrEyesColors)
+        name: window.helpers.getRandomValue(arrNames) + ' ' + window.helpers.getRandomValue(arrSurnames),
+        coatColor: window.helpers.getRandomValue(arrCoatColors),
+        eyesColor: window.helpers.getRandomValue(arrEyesColors)
       };
       heros.push(hero);
     }
     return heros;
   };
 
-  var wizards = window.getHeros(window.util.NAMES, window.util.SURNAMES, window.util.COATCOLORS, window.util.EYESCOLORS);
+  var wizards = getHeros(window.util.NAMES, window.util.SURNAMES, window.util.COATCOLORS, window.util.EYESCOLORS);
 
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
@@ -43,5 +43,4 @@ window.similarWizard = (function () {
   }
 
   similarListElement.appendChild(fragment);
-
 })();
