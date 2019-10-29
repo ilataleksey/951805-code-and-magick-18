@@ -13,7 +13,4 @@
   window.colorize(wizardCoat, coatColorInput, window.util.COATCOLORS);
   window.colorize(wizardEyes, eyesColorInput, window.util.EYESCOLORS);
   window.colorize(wizardFireball, fireballColorInput, window.util.FIREBALLCOLORS);
-
-  window.similarWizard(window.util.NAMES, window.util.SURNAMES, window.util.COATCOLORS, window.util.EYESCOLORS);
-
 })();
