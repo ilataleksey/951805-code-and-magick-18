@@ -87,8 +87,8 @@
         y: moveEvt.clientY
       };
 
-      userDialog.style.top = (window.util.userDialog.offsetTop - shift.y) + 'px';
-      userDialog.style.left = (window.util.userDialog.offsetLeft - shift.x) + 'px';
+      userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
+      userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
 
     };
 
