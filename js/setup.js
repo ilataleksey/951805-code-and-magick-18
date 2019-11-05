@@ -1,33 +1,108 @@
 'use strict';
 
 (function () {
-  var WIZARD_COUNT = 4;
+
+  var COAT_COLORS = [
+    'rgb(101, 137, 164)',
+    'rgb(241, 43, 107)',
+    'rgb(146, 100, 161)',
+    'rgb(56, 159, 117)',
+    'rgb(215, 210, 55)',
+    'rgb(0, 0, 0)'
+  ];
+  var EYES_COLORS = [
+    'black',
+    'red',
+    'blue',
+    'yellow',
+    'green'
+  ];
+  var FIREBALL_COLORS = [
+    '#ee4830',
+    '#30a8ee',
+    '#5ce6c0',
+    '#e848d5',
+    '#e6e848'
+  ];
+
+  var coatColor;
+  var eyesColor;
+
   var userDialog = document.querySelector('.setup');
+
   var wizardCoat = userDialog.querySelector('.wizard-coat');
   var coatColorInput = userDialog.querySelector('input[name=coat-color]');
+  wizardCoat.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    var newColor = window.helpers.getRandomValue(COAT_COLORS);
+    wizardCoat.style.fill = newColor;
+    coatColorInput.value = newColor;
+    onCoatChange(newColor);
+  });
+
   var wizardEyes = userDialog.querySelector('.wizard-eyes');
   var eyesColorInput = userDialog.querySelector('input[name=eyes-color]');
+  wizardEyes.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    var newColor = window.helpers.getRandomValue(EYES_COLORS);
+    wizardEyes.style.fill = newColor;
+    eyesColorInput.value = newColor;
+    onEyesChange(newColor);
+  });
+
   var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
   var fireballColorInput = userDialog.querySelector('input[name=fireball-color]');
+  // var fireballColor;
+  wizardFireball.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    var newColor = window.helpers.getRandomValue(FIREBALL_COLORS);
+    wizardFireball.style.background = newColor;
+    fireballColorInput.value = newColor;
+    // fireballColor = newColor;
+  });
 
-  window.colorize(wizardCoat, coatColorInput, window.util.COATCOLORS);
-  window.colorize(wizardEyes, eyesColorInput, window.util.EYESCOLORS);
-  window.colorize(wizardFireball, fireballColorInput, window.util.FIREBALLCOLORS);
+  var getRank = function (wizard) {
+    var rank = 0;
 
-  var similarListElement = document.querySelector('.setup-similar-list');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template')
-    .content
-    .querySelector('.setup-similar-item');
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
 
-  var renderWizard = function (wizard) {
-    var wizardElement = similarWizardTemplate.cloneNode(true);
-
-    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
-
-    return wizardElement;
+    return rank;
   };
+
+  var namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var updateWizards = function () {
+    window.render(wizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  var onEyesChange = window.debounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
+
+  var onCoatChange = window.debounce(function (color) {
+    coatColor = color;
+    updateWizards();
+  });
 
   var form = userDialog.querySelector('.setup-wizard-form');
   form.addEventListener('submit', function (evt) {
@@ -35,16 +110,10 @@
     window.backend.save(window.backend.URL, new FormData(form), successSaveHandler, errorHandler);
   });
 
-  var successLoadHandler = function (wizards) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < WIZARD_COUNT; i++) {
-      fragment.appendChild(renderWizard(wizards[i]));
-    }
-    similarListElement.appendChild(fragment);
-
-    var setupSimilar = document.querySelector('.setup-similar');
-    setupSimilar.classList.remove('hidden');
+  var wizards = [];
+  var successLoadHandler = function (data) {
+    wizards = data;
+    window.render(wizards);
   };
 
   var errorHandler = function (errorMessage) {
